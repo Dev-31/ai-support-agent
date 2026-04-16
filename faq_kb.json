@@ -1,0 +1,19 @@
+{
+  "faqs": [
+    {
+      "category": "billing",
+      "question": "How do I upgrade my plan?",
+      "answer": "You can upgrade your plan by going to Settings > Billing and selecting 'Upgrade'. Your new limits will apply immediately."
+    },
+    {
+      "category": "technical",
+      "question": "The agent is stuck in a sandbox",
+      "answer": "If your agent is stuck in a sandbox, ensure you have disabled the 'sandbox_mode' flag in your configuration file and restarted the service."
+    },
+    {
+      "category": "onboarding",
+      "question": "How do I invite team members?",
+      "answer": "Navigate to the Team tab and click 'Invite Member'. They will receive an email link to join your workspace."
+    }
+  ]
+}

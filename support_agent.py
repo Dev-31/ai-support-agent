@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
-"""AI Support Triage Agent - MVP CLI"""
+"""AI Support Triage Agent - LLM-powered CLI"""
+
 import sys
-import json
 import time
+
+from agent import (
+    OllamaConnectionError,
+    OllamaError,
+    OllamaResponseError,
+    OllamaTimeoutError,
+    generate_support_reply,
+)
+
 
 def print_typing(text, speed=0.02):
     for char in text:
@@ -11,50 +20,67 @@ def print_typing(text, speed=0.02):
         time.sleep(speed)
     print()
 
-import os
 
-_KB_PATH = os.path.join(os.path.dirname(__file__), 'faq_kb.json')
+def analyze_ticket(ticket: str) -> None:
+    """
+    Classify and respond to a support ticket using the Ollama LLM.
 
-def analyze_ticket(ticket):
+    Raises:
+        ValueError: If ticket is empty.
+        OllamaError and subclasses: If the LLM call fails.
+    """
     ticket = ticket.strip()
     if not ticket:
         raise ValueError("Empty ticket: please provide a non-empty support ticket.")
 
-    with open(_KB_PATH, 'r') as f:
-        kb = json.load(f)
-    
-    ticket_lower = ticket.lower()
-    
-    print_typing(">> Analyzing ticket...", 0.03)
-    time.sleep(0.5)
+    print_typing(">> Analyzing ticket with AI...", 0.03)
+    time.sleep(0.3)
     print_typing(">> Searching Knowledge Base...", 0.03)
-    time.sleep(0.5)
-    
-    if "sandbox" in ticket_lower:
-        category = "Technical"
-        match = next((item for item in kb['faqs'] if item['category'] == 'technical'), None)
-    elif "upgrade" in ticket_lower or "billing" in ticket_lower:
-        category = "Billing"
-        match = next((item for item in kb['faqs'] if item['category'] == 'billing'), None)
-    else:
-        category = "General Inquiry"
-        match = {"answer": "I'll escalate this to our human support team for further review."}
-    
+    time.sleep(0.3)
+    print_typing(">> Generating response via LLM...", 0.03)
+
+    category, reply = generate_support_reply(ticket)
+
     print_typing(f">> Classification: {category}", 0.03)
-    time.sleep(0.5)
-    
+    time.sleep(0.4)
+
     print("\n================ DRAFTED RESPONSE ================\n")
-    answer = match['answer'] if match else "Our support team will review this ticket and follow up shortly."
-    print_typing(f"Hi there,\n\nThanks for reaching out about this.\n\n{answer}\n\nLet me know if you need anything else!\n\nBest,\nAI Support Team", 0.01)
+    print_typing(
+        f"Hi there,\n\n"
+        f"Thanks for reaching out.\n\n"
+        f"{reply}\n\n"
+        f"Let me know if you need anything else!\n\n"
+        f"Best,\nAI Support Team",
+        0.01,
+    )
     print("\n==================================================")
 
+
 if __name__ == "__main__":
-    print(" AI Support Triage Agent - MVP Ready")
-    print("--------------------------------------")
+    print(" AI Support Triage Agent - LLM Edition")
+    print("----------------------------------------")
+
     if len(sys.argv) > 1:
-        ticket = sys.argv[1]
+        ticket = " ".join(sys.argv[1:])
     else:
         ticket = input("Paste a customer support ticket: ")
-    
-    print(f"\n[Incoming Ticket]: \"{ticket}\"\n")
-    analyze_ticket(ticket)
+
+    print(f'\n[Incoming Ticket]: "{ticket}"\n')
+
+    try:
+        analyze_ticket(ticket)
+    except ValueError as e:
+        print(f"\n[Error] {e}", file=sys.stderr)
+        sys.exit(1)
+    except OllamaConnectionError as e:
+        print(f"\n[Connection Error] {e}", file=sys.stderr)
+        sys.exit(2)
+    except OllamaTimeoutError as e:
+        print(f"\n[Timeout Error] {e}", file=sys.stderr)
+        sys.exit(3)
+    except OllamaResponseError as e:
+        print(f"\n[LLM Response Error] {e}", file=sys.stderr)
+        sys.exit(4)
+    except OllamaError as e:
+        print(f"\n[LLM Error] {e}", file=sys.stderr)
+        sys.exit(5)

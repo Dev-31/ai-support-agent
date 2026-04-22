@@ -3,17 +3,92 @@
     {
       "category": "billing",
       "question": "How do I upgrade my plan?",
-      "answer": "You can upgrade your plan by going to Settings > Billing and selecting 'Upgrade'. Your new limits will apply immediately."
+      "answer": "You can upgrade your plan by going to Settings > Billing and selecting 'Upgrade'. Your new limits will apply immediately and you'll be charged on a prorated basis."
+    },
+    {
+      "category": "billing",
+      "question": "How do I cancel my subscription?",
+      "answer": "To cancel your subscription, go to Settings > Billing > Cancel Plan. Your access continues until the end of your current billing period. We do not offer prorated refunds for mid-cycle cancellations."
+    },
+    {
+      "category": "billing",
+      "question": "Why was I charged twice?",
+      "answer": "Double charges are typically caused by a failed payment retried by your bank. Please check your bank statement for a corresponding reversal. If both charges settled, contact billing@support.example.com with your invoice ID and we will issue a refund within 3–5 business days."
+    },
+    {
+      "category": "billing",
+      "question": "How do I update my payment method?",
+      "answer": "Go to Settings > Billing > Payment Methods and click 'Add Card'. Your new card will be used for future charges. You can remove old cards once the new one is confirmed."
     },
     {
       "category": "technical",
       "question": "The agent is stuck in a sandbox",
-      "answer": "If your agent is stuck in a sandbox, ensure you have disabled the 'sandbox_mode' flag in your configuration file and restarted the service."
+      "answer": "If your agent is stuck in a sandbox, ensure you have disabled the 'sandbox_mode' flag in your configuration file and restarted the service. You can also run `agent restart --force` from the CLI to force a clean state."
+    },
+    {
+      "category": "technical",
+      "question": "I am getting a 401 Unauthorized error",
+      "answer": "A 401 error means your API key is missing, expired, or malformed. Verify your key at Settings > API Keys. Keys must be passed in the Authorization header as 'Bearer <key>'. If the key was recently rotated, update all integrations."
+    },
+    {
+      "category": "technical",
+      "question": "I am getting a 429 rate limit error",
+      "answer": "You have exceeded the request rate for your plan tier. Implement exponential backoff in your client and consider upgrading your plan for higher limits. The Retry-After header in the response tells you how many seconds to wait."
+    },
+    {
+      "category": "technical",
+      "question": "Webhooks are not being delivered",
+      "answer": "Check that your endpoint returns HTTP 200 within 5 seconds. Events older than 72 hours are not retried. Navigate to Settings > Webhooks to replay failed events and view delivery logs."
+    },
+    {
+      "category": "technical",
+      "question": "The API response is slow or timing out",
+      "answer": "Response latency over 10 seconds usually indicates a large payload or a cold-start on a serverless region. Try reducing batch sizes, enabling streaming responses, or pinning to a specific region in your client config."
+    },
+    {
+      "category": "password_reset",
+      "question": "I forgot my password",
+      "answer": "Click 'Forgot Password' on the login page and enter your registered email. You will receive a reset link valid for 15 minutes. If the email does not arrive, check spam or contact support with your account email."
+    },
+    {
+      "category": "password_reset",
+      "question": "My reset link expired",
+      "answer": "Password reset links expire after 15 minutes for security. Visit the login page and request a new reset link. If you continue to have trouble, our support team can manually trigger a reset after verifying your identity."
     },
     {
       "category": "onboarding",
       "question": "How do I invite team members?",
-      "answer": "Navigate to the Team tab and click 'Invite Member'. They will receive an email link to join your workspace."
+      "answer": "Navigate to the Team tab and click 'Invite Member'. Enter their email address and select a role (Admin, Editor, or Viewer). They will receive an email link to join your workspace. Invitations expire after 48 hours."
+    },
+    {
+      "category": "onboarding",
+      "question": "How do I get started with the API?",
+      "answer": "Generate an API key at Settings > API Keys, then follow our Quickstart guide at docs.example.com/quickstart. SDKs are available for Python, TypeScript, Go, and Java. Our sandbox environment lets you test without affecting production data."
+    },
+    {
+      "category": "account",
+      "question": "How do I change my email address?",
+      "answer": "Go to Settings > Profile > Email and enter your new address. A confirmation link will be sent to both your old and new email addresses. The change takes effect once both are confirmed."
+    },
+    {
+      "category": "account",
+      "question": "How do I delete my account?",
+      "answer": "Account deletion is permanent and removes all your data. Go to Settings > Account > Delete Account and follow the confirmation steps. If you are on a paid plan, cancel your subscription first to avoid further charges."
+    },
+    {
+      "category": "integration",
+      "question": "How do I connect a third-party integration?",
+      "answer": "Go to Settings > Integrations and select the service you want to connect. Follow the OAuth flow or enter the required API credentials. Each integration has a dedicated setup guide in our docs at docs.example.com/integrations."
+    },
+    {
+      "category": "integration",
+      "question": "My Slack integration stopped working",
+      "answer": "Slack integrations break when the authorizing user's token is revoked or the workspace permissions change. Reconnect the integration at Settings > Integrations > Slack by re-authorizing with a Slack admin account."
+    },
+    {
+      "category": "performance",
+      "question": "The dashboard is loading slowly",
+      "answer": "Dashboard slowness is usually caused by large date ranges or heavy filters. Try narrowing the date range, clearing browser cache, or using a supported browser (Chrome 110+, Firefox 110+, Safari 16+). If the issue persists across browsers, check our status page at status.example.com."
     }
   ]
 }
